@@ -13,9 +13,18 @@ app.get('/', function (req, res) {
     res.send('TODO API Root');
 });
 
-// GET /todos
+// GET /todos?completed=true
 app.get('/todos', function (req, res) {
-   res.json(todos);
+    var queryParams = req.query;
+    var filtredTodos = todos;
+
+    if(queryParams.hasOwnProperty('completed') && queryParams.completed === 'true'){
+        filtredTodos = _.where(filtredTodos, {completed: true});
+    } else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false'){
+        filtredTodos = _.where(filtredTodos, {completed: false})
+    }
+
+   res.json(filtredTodos);
 });
 
 // GET /todos/:id
@@ -135,3 +144,4 @@ app.put('/todos/:id', function (req, res) {
 app.listen(PORT, function () {
     console.log('Express e partito sulla porta ' + PORT + '!' );
 });
+
