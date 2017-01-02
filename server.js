@@ -127,15 +127,14 @@ app.delete('/todos/:id', function(req, res) {
         }
     }).then(function (rowsDeleted) {
         if (rowsDeleted === 0) {
-            res.status(404).json({
+            return res.status(404).json({
                 error: 'Nessun todo con questo ID!'
             });
         } else {
             res.status(204).send();
         }
-    }, function (err) {
-        console.log(err);
-        res.status(200).send(err);
+    }, function () {
+        res.status(500).send();
     });
 
     // db.todo.findById(todoId).then(function(todo){
