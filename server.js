@@ -16,8 +16,28 @@ app.get('/', function (req, res) {
 
 // GET /todos?completed=true&q=house
 app.get('/todos', function (req, res) {
-    var queryParams = req.query;
-    var filtredTodos = todos;
+    var query = req.query;
+    var where = {};
+
+    if(query.hasOwnProperty('completed') && query.completed === 'true'){
+        where.completed = true;
+    } else if(query.hasOwnProperty('completed') && query.completed === 'false'){
+        where.completed = false;
+    }
+
+
+    if(query.hasOwnProperty('q') && query.q.length >0){
+        where.description = {
+            $like: '%' + query.q +'%'
+        };
+    }
+    db.todo.findAll({where: where}).then(function (todos) {
+        res.json(todos);
+    }, function (e) {
+       res.status(500).json(e);
+    });
+
+    /*var filtredTodos = todos;
 
     if(queryParams.hasOwnProperty('completed') && queryParams.completed === 'true'){
         filtredTodos = _.where(filtredTodos, {completed: true});
@@ -30,7 +50,7 @@ app.get('/todos', function (req, res) {
            return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase())> -1;
         });
     }
-   res.json(filtredTodos);
+   res.json(filtredTodos);*/
 });
 
 // GET /todos/:id
