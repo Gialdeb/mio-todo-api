@@ -36,7 +36,18 @@ app.get('/todos', function (req, res) {
 // GET /todos/:id
 app.get('/todos/:id', function (req, res) {
     var todoId = parseInt(req.params.id, 10);
-    var matchedTodo = _.findWhere(todos, {id: todoId});
+   // var matchedTodo = _.findWhere(todos, {id: todoId});
+
+    db.todo.findById(todoId).then(function (todo) {
+    if(!!todo){
+            res.json(todo.toJSON());
+        }else{
+            res.status(404).send();
+        }
+    }, function (e) {
+        res.status(500).json(e);
+    });
+
     // var matchedTodo;
 
     // todos.forEach(function (todo) {
@@ -45,11 +56,11 @@ app.get('/todos/:id', function (req, res) {
     //     }
     // });
 
-    if(matchedTodo) {
+   /* if(matchedTodo) {
         res.json(matchedTodo);
     } else {
         res.status(404).send();
-    }
+    }*/
 });
 
 // POST /todos
@@ -88,14 +99,16 @@ app.post('/todos', function (req, res) {
     // DELETE /todos/:id
     app.delete('/todos/:id', function (req, res) {
         var todoId = parseInt(req.params.id, 10);
-        var matchedTodo = _.findWhere(todos, {id: todoId});
+        /*var matchedTodo = _.findWhere(todos, {
+            id: todoId
+        });
 
         if(!matchedTodo) {
             res.status(404).json({"error": "nessun ID trovato"});
         } else {
             todos = _.without(todos, matchedTodo);
             res.json(matchedTodo);
-        }
+        }*/
     });
 
     // PUT /todos/:id
