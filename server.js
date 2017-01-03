@@ -42,7 +42,6 @@ app.get('/todos', function (req, res) {
 // GET /todos/:id
 app.get('/todos/:id', function (req, res) {
     var todoId = parseInt(req.params.id, 10);
-   // var matchedTodo = _.findWhere(todos, {id: todoId});
 
     db.todo.findById(todoId).then(function (todo) {
     if(!!todo){
